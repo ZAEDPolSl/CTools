@@ -1,0 +1,11 @@
+[project]
+name = "CTools"
+version = "0.1.0"
+description = "Package with tools for medical image analysis"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "itk>=5.4.4.post1",
+    "numpy>=2.2.6",
+    "simpleitk>=2.5.2",
+]
