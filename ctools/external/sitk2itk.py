@@ -82,13 +82,15 @@ def copy_sitk_to_itk_meta(
     _itk_image.SetOrigin(_reference_sitk_image.GetOrigin())
     _itk_image.SetSpacing(_reference_sitk_image.GetSpacing())
 
-    # Setting the direction (cosines of the study coordinate axis direction in the space)
-    reference_image_direction: np.ndarray = np.eye(3)
+    # Preserve the source direction instead of resetting to identity.
+    dimension = _itk_image.GetImageDimension()
+    reference_image_direction = np.asarray(
+        _reference_sitk_image.GetDirection(), dtype=np.float64
+    ).reshape(dimension, dimension)
     np_dir_vnl = itk.GetVnlMatrixFromArray(reference_image_direction)
     itk_image_direction = _itk_image.GetDirection()
     itk_image_direction.GetVnlMatrix().copy_in(np_dir_vnl.data_block())
 
-    dimension: int = _itk_image.GetImageDimension()
     input_image_type = type(_itk_image)
     output_image_type = itk.Image[_output_pixel_type, dimension]
 
